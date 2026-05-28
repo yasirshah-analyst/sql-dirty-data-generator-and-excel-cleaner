@@ -42,7 +42,7 @@ sql-customers-dirty-data-creation/
 │   └── customers_dirty_creation.sql
 │
 ├── Data/
-│   └── Raw/
+│   └── Raw Data/
 │       └── customers_dirty.csv
 │           
 └── README.md
@@ -161,7 +161,7 @@ from customers_dirty;
 
 ## Raw Data
 
-[View Raw Dataset](Data/Raw/customers_dirty.csv.csv)
+[View Raw Dataset](Data/Raw Data/customers_dirty.csv.csv)
 
 ---
 
