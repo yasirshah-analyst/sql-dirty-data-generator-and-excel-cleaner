@@ -197,9 +197,239 @@ SQL Data Analytics Portfolio Project
 
 ---
 
-## ⭐ Purpose
+# Excel Data Cleaning Project
 
-This project is part of my data analytics learning journey to practice:
+## Step 1: Inspect the Dataset
 
-- SQL Data Generation
-- Portfolio building for analytics roles
+### Checked all columns for:
+- Missing values
+- Duplicate records
+- Invalid formats
+- Inconsistent text
+- Outliers
+- Incorrect data types
+
+---
+
+## Step 2: Clean Name Column
+
+### Issues Found
+Extra leading and trailing spaces in names.
+
+### Example
+
+| Before |
+|----------|
+|   Ali Khan   |
+
+### Actions
+- Removed unnecessary leading and trailing spaces.
+- Standardized name formatting.
+
+### Using
+
+```excel
+=TRIM(A2)
+```
+
+---
+
+## Step 3: Clean Email Column
+
+### Issues Found
+
+**Invalid Emails**
+- invalidemail.com
+
+**Duplicate Emails**
+- test@test.com appeared multiple times
+
+### Actions
+- Flagged invalid email addresses.
+- Identified duplicate email records.
+- Excluded duplicate emails from analysis where necessary.
+
+### Examples
+
+| Invalid Email | Duplicate Email |
+|--------------|----------------|
+| invalidemail.com | test@test.com |
+
+---
+
+## Step 4: Clean Phone Number Column
+
+### Issues Found
+
+**Invalid Format**
+- 123-456-789
+
+**Missing Values**
+- NULL
+
+### Actions
+- Standardized phone number formatting.
+- Converted NULL values to blank cells.
+- Flagged invalid phone numbers for review.
+
+### Examples
+
+| Invalid Phone |
+|--------------|
+| 123-456-789 |
+
+---
+
+## Step 5: Clean City Column
+
+### Issues Found
+
+Different spellings and capitalization:
+
+- Islamabad
+- karachi
+- LAHORE
+
+### Actions
+- Standardized city names.
+- Applied proper capitalization.
+
+### Standardized Values
+
+- Islamabad
+- Karachi
+- Lahore
+
+### Using
+
+```excel
+=PROPER(A2)
+```
+
+---
+
+## Step 6: Clean Country Column
+
+### Issues Found
+
+- Pakistan
+- IND
+
+### Actions
+- Standardized country names.
+- Replaced abbreviations with full country names.
+
+### Example
+
+| Before | After |
+|---------|--------|
+| IND | India |
+
+---
+
+## Step 7: Handle Missing City Values
+
+### Issues Found
+
+Blank city records.
+
+### Actions
+- Identified missing city values.
+- Replaced with "Unknown" or left blank according to business requirements.
+
+---
+
+## Step 8: Clean Amount Column
+
+### Issues Found
+
+**Non-Numeric Values**
+- abc
+
+**Potential Outliers**
+- 999999
+
+### Actions
+- Converted Amount column to numeric format.
+- Flagged non-numeric values.
+- Investigated extreme outliers.
+
+### Examples
+
+| Invalid Value | Outlier |
+|--------------|---------|
+| abc | 999999 |
+
+---
+
+## Step 9: Validate Date Column
+
+### Issues Found
+
+Dates that could be interpreted differently:
+
+- 1/2/2023
+- 12/5/2023
+
+### Actions
+- Converted all dates to a consistent format.
+- Standardized dates using ISO format.
+
+### Standardized Format
+
+```text
+YYYY-MM-DD
+```
+
+### Examples
+
+| Original | Standardized |
+|-----------|-------------|
+| 1/2/2023 | 2023-01-02 |
+| 12/5/2023 | 2023-12-05 |
+
+---
+
+## Step 10: Check Duplicate Names
+
+### Issues Found
+
+Repeated names:
+
+- Sara Ahmed
+- Ali Khan
+
+### Actions
+- Verified records using Email and ID.
+- Did not remove records because names alone do not indicate duplicates.
+
+---
+
+## Step 11: Verify ID Column
+
+### Actions
+- Checked for missing IDs.
+- Checked for duplicate IDs.
+- Confirmed primary key integrity.
+
+---
+
+# Project Summary
+
+### Data Cleaning in Excel
+
+✔ Removed extra spaces from name fields using TRIM().
+
+✔ Identified and flagged invalid email addresses and duplicate email records.
+
+✔ Standardized city and country values for consistency.
+
+✔ Cleaned phone number formats and handled missing values.
+
+✔ Converted date fields into a consistent format.
+
+✔ Validated transaction amounts and flagged non-numeric values and outliers.
+
+✔ Verified data integrity through duplicate and missing-value checks.
+
+✔ Prepared a clean, analysis-ready dataset for reporting and dashboard creation.
