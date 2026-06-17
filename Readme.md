@@ -327,7 +327,7 @@ The dataset was intentionally populated using SQL `CASE WHEN` statements and `ge
 ```
 
 ### Cleaning Evidence
-![Country City](cleaning\clean_city.png)
+![Country City](cleaning/clean_city.png)
 
 ---
 
