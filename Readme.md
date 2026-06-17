@@ -90,6 +90,7 @@ CREATE TABLE customers_dirty (
     signup_date TEXT,
     amount TEXT
 );
+```
 
 ---
 
@@ -171,11 +172,10 @@ FROM customers_dirty;
 
 [View Raw Dataset](Data/Raw/customers_dirty.csv)
 
-## Generate Dirty Data
-
-The dataset was intentionally populated using SQL `CASE WHEN` statements and `generate_series()` to simulate common real-world data quality issues.
+---
 
 ### Simulated Data Quality Issues
+The dataset was intentionally populated using SQL `CASE WHEN` statements and `generate_series()` to simulate common real-world data quality issues.
 
 | Column | Issues Introduced |
 |----------|----------|
@@ -190,10 +190,6 @@ The dataset was intentionally populated using SQL `CASE WHEN` statements and `ge
 ### SQL Script
 
 `SQL/customers_dirty_creation.sql`
-
-### Raw Dataset
-
-[View Raw Dataset](Data/Raw/customers_dirty.csv)
 
 ---
 
