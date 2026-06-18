@@ -386,8 +386,7 @@ YYYY-MM-DD
 ## 🛠️ Tools Used
 
 - PostgreSQL
-- SQL
-- Microsoft Excel
+- WPS Excel
 
 ---
 
