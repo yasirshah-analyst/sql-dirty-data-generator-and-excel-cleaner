@@ -320,7 +320,7 @@ The dataset was intentionally populated using SQL `CASE WHEN` statements and `ge
 ### Actions Taken
 
 - Identified missing city values
-- Replaced with "Unknown" where appropriate
+- Replaced with "Missing" where appropriate
 
 ```excel
 =PROPER(IF(F2="","Missing",F2))
