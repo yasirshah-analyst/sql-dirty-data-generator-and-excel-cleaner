@@ -617,7 +617,16 @@ Reducing excessive decimal places:
 
 ---
 
-## Step 9: Validate Date Column
+## Step 9: Standardize Date Formats
+
+### Issue Identified
+
+Mixed date formats:
+
+```text
+2023-01-15
+12-05-2023
+```
 
 ### Final Format
 
@@ -625,9 +634,14 @@ Reducing excessive decimal places:
 YYYY-MM-DD
 ```
 
+### Why?
+
+Consistent dates are required for trend analysis and reporting.
+
 ### Cleaning Evidence
 
 ![Date Cleaning](cleaning/clean_date.png)
+
 
 ---
 
