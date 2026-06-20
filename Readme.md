@@ -35,19 +35,6 @@ The project showcases both data generation and data cleaning skills commonly use
 
 ---
 
-## 🎯 Project Objectives
-
-This project focuses on solving a real data quality problem by:
-
-- Generate a realistic dirty customer dataset using SQL.
-- Simulate common data quality issues found in business datasets.
-- Identifying and correcting data inconsistencies in Excel.
-- Standardizing formats for analysis
-- Handle missing values, duplicates, and formatting issues.
-- Produce a clean dataset suitable for analysis and reporting.
-
----
-
 ## 🗂️ Dataset Description
 
 The dataset contains customer information including:
