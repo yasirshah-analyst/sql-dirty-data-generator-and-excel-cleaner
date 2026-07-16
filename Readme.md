@@ -767,6 +767,36 @@ After cleaning the dataset:
 
 ---
 
+## 🔄 Project Update: Power BI Extension (In Progress)
+
+This project is being extended beyond SQL + Excel cleaning into a full **Power BI analysis**, covering the complete process from problem definition to business insights and recommendations.
+
+### Status: 🚧 In Progress
+
+Currently building two report pages:
+- **Page 1 — Data Quality Impact:** quantifies how much the raw (dirty) data distorted customer counts and revenue reporting, and documents every category of issue found (invalid amounts, invalid/test emails, missing/invalid phone formats, blank cities).
+- **Page 2 — Customer & Revenue Insights:** analyzes the *cleaned* data to answer real business questions — which cities generate the most revenue, which have the highest average transaction value, and where the biggest customer base is concentrated.
+
+### 🐞 Data Issue Found & Fix In Progress
+
+While building Page 2, a new data quality issue was discovered that wasn't caught during the original SQL/Excel cleaning stage:
+
+**Issue:** Every record where `country = India` had a **Pakistani city** (Islamabad, Karachi, or Lahore) instead of an Indian one.
+
+**Root cause:** The original SQL script's random data generator selected `city` and `country` independently of each other, rather than pairing valid city–country combinations. As a result, any row randomly assigned "India" as its country still pulled from the same fixed city list, which only ever contained Pakistani cities.
+
+**Fix:** Since every "India" row was consistently paired with a real Pakistani city, this confirms the **country** field — not the city — was the incorrect value. The fix is being applied in **Power Query** (Power BI) using a `Replace Values` step: `India → Pakistan`.
+
+This decision was made deliberately at the Power Query stage (rather than re-editing the original CSV/Excel source) to keep the transformation logic visible, documented, and reproducible as part of the Power BI data model — consistent with this project's goal of showing the *full* analytics process, including issues found and corrected along the way, not just a polished final result.
+
+### Why this is documented here
+This project isn't meant to show only clean, pre-planned steps — it's meant to reflect a genuine, real-world analytics workflow, where new issues can surface even after earlier cleaning stages, and part of the job is catching them, diagnosing the root cause, and deciding where in the pipeline to fix them.
+
+---
+*This section will be updated as the Power BI portion of the project progresses.*
+
+---
+
 # 👤 Author
 
 **Yasir Shah**
