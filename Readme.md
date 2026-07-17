@@ -28,15 +28,16 @@ business insights.
 
 ## 🎯 Project Goal
 
-The goal of this project is to simulate a real-world, "dirty" customer dataset
-and execute an end-to-end transformation. By leveraging data cleaning and
-engineering best practices, this pipeline turns chaotic raw data into a clean,
-optimized, and analysis-ready source of truth suitable for reliable business
-reporting.
+The goal of this project is to simulate a real-world, "dirty" customer dataset and perform an end-to-end data quality improvement process. By applying data cleaning and transformation best practices using SQL, Excel, Power Query, and Power BI, this pipeline converts inconsistent raw data into a clean, optimized, and analysis-ready dataset.
 
-> **Scope note:** This project currently covers data generation and cleaning
-> (SQL + Excel). A Power BI dashboard for visualizing the cleaned dataset is a
-> planned next phase.
+The project covers the complete analytics workflow:
+- Generating realistic dirty customer data using SQL
+- Identifying and fixing data quality issues
+- Cleaning and transforming data using SQL, Excel, and Power Query
+- Building a Power BI dashboard to analyze customer and revenue insights
+- Creating reliable reporting outputs for business decision-making
+
+This project demonstrates how raw operational data can be transformed into a trusted source of information for business analysis and reporting.
 
 ---
 
