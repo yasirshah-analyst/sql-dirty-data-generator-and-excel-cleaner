@@ -770,48 +770,6 @@ Leadership suspects that inconsistent and low-quality customer data may be causi
 
 ---
 
-### Dashboard Structure
-
-The Power BI report is built as a 3-page story, moving from **problem → evidence → decision**:
-
-#### Page 1 — Data Quality Impact
-Compares the raw (dirty) dataset against the cleaned dataset side by side, to quantify exactly how much the bad data was distorting the numbers.
-
-- Total Raw Customers: **500**
-- Total Clean Customers: **500**
-- Total Raw Revenue: **25.16M**
-- Total Clean Revenue: **156.395k**
-- Revenue overstatement: **99.38%** *(see formula explanation below)*
-- Invalid Amount Count: **28**
-- Invalid Format Email Count: **33**
-- Test/Fake Email Count: **44**
-- Missing Phone Count: **41**
-- Invalid Phone Format Count: **92**
-- Blank City Count: **34**
-- Country City Mismatch Count: **50**
-
-**Formula used for revenue overstatement:**
-```
-(Raw Revenue − Clean Revenue) ÷ Raw Revenue × 100
-```
-This calculates what percentage of the raw reported revenue was actually inflated or invalid. Step by step:
-1. Subtract clean revenue from raw revenue to find the gap (the "fake" revenue caused by bad data).
-2. Divide that gap by the raw revenue to turn it into a fraction of the whole.
-3. Multiply by 100 to express it as a percentage.
-
-In plain terms: *out of everything the raw data claimed as revenue, what percentage of that was actually wrong or inflated?*
-
-#### Page 2 — Customer & Revenue Insights
-Analyzes only the cleaned, trustworthy data to answer real business questions: which cities generate the most revenue, which have the highest average transaction value, and where the customer base is concentrated.
-
-- Total Clean Customers: **500**
-- Total Clean Revenue: **156.395k**
-- Average Clean Transaction Value: **349.88**
-- City with highest total revenue: **Islamabad**
-- City with highest average transaction value: **Lahore**
-
----
-
 ### 🧮 Technical Implementation (DAX Measures)
 
 All calculations behind the dashboard were built using DAX measures rather than hardcoded values, so every number updates automatically if the underlying data changes.
@@ -891,7 +849,50 @@ Country/City Mismatch Count found: **50**
 
 ---
 
-### 💡 Key Insights
+### Dashboard Structure
+
+The Power BI report is built as a 3-page story, moving from **problem → evidence → decision**:
+
+#### Page 1 — Data Quality Impact
+Compares the raw (dirty) dataset against the cleaned dataset side by side, to quantify exactly how much the bad data was distorting the numbers.
+
+- Total Raw Customers: **500**
+- Total Clean Customers: **500**
+- Total Raw Revenue: **25.16M**
+- Total Clean Revenue: **156.395k**
+- Revenue overstatement: **99.38%** *(see formula explanation below)*
+- Invalid Amount Count: **28**
+- Invalid Format Email Count: **33**
+- Test/Fake Email Count: **44**
+- Missing Phone Count: **41**
+- Invalid Phone Format Count: **92**
+- Blank City Count: **34**
+- Country City Mismatch Count: **50**
+
+**Formula used for revenue overstatement:**
+```
+(Raw Revenue − Clean Revenue) ÷ Raw Revenue × 100
+```
+This calculates what percentage of the raw reported revenue was actually inflated or invalid. Step by step:
+1. Subtract clean revenue from raw revenue to find the gap (the "fake" revenue caused by bad data).
+2. Divide that gap by the raw revenue to turn it into a fraction of the whole.
+3. Multiply by 100 to express it as a percentage.
+
+In plain terms: *out of everything the raw data claimed as revenue, what percentage of that was actually wrong or inflated?*
+
+#### Page 2 — Customer & Revenue Insights
+Analyzes only the cleaned, trustworthy data to answer real business questions: which cities generate the most revenue, which have the highest average transaction value, and where the customer base is concentrated.
+
+- Total Clean Customers: **500**
+- Total Clean Revenue: **156.395k**
+- Average Clean Transaction Value: **349.88**
+- City with highest total revenue: **Islamabad**
+- City with highest average transaction value: **Lahore**
+
+---
+
+#### Page 3- Insights and Recommendations
+##### 💡 Key Insights
 
 **Data Quality:**
 > Raw customer data contained significant quality issues that would have distorted business reporting if used as-is. Raw revenue was overstated by approximately **99.38%%** due to invalid and outlier amount entries. **77** records had invalid or test/fake email addresses, and **133** records had missing or invalid phone numbers. Additionally, a systematic data generation issue was found and corrected, where all records marked "India" actually contained Pakistani cities. After cleaning, the trustworthy customer base is **500** records with total revenue of **156.395k**.
@@ -901,7 +902,7 @@ Country/City Mismatch Count found: **50**
 
 ---
 
-### ✅ Recommendations
+##### ✅ Recommendations
 
 1. Focus our marketing budget on **Lahore** city with highest average value , since customers there spend the most on average.
 2. Fix the signup page to check phone and email fields, since these two areas were our biggest sources of bad data.
