@@ -760,41 +760,172 @@ After cleaning the dataset:
 
 ---
 
-# 🛠️ Tools Used
+## 📊 Phase 3: Power BI
 
-- PostgreSQL
-- WPS Excel
+### Problem Definition
+
+Leadership suspects that inconsistent and low-quality customer data may be causing inaccurate revenue reporting and unreliable customer counts, undermining confidence in dashboards used for business decisions. This phase quantifies how much the raw data was distorting the numbers, cleans and validates it, and determines what revenue and customer-acquisition picture the business can actually trust.
+
+**Stakeholder question:** *How much of our reported revenue and customer base was actually real — and where should we focus our acquisition efforts based on the reliable data?*
+
+---
+
+### Dashboard Structure
+
+The Power BI report is built as a 3-page story, moving from **problem → evidence → decision**:
+
+#### Page 1 — Data Quality Impact
+Compares the raw (dirty) dataset against the cleaned dataset side by side, to quantify exactly how much the bad data was distorting the numbers.
+
+- Total Raw Customers: **500**
+- Total Clean Customers: **500**
+- Total Raw Revenue: **25.16M**
+- Total Clean Revenue: **156.395k**
+- Revenue overstatement: **99.38%** *(see formula explanation below)*
+- Invalid Amount Count: **28**
+- Invalid Format Email Count: **33**
+- Test/Fake Email Count: **44**
+- Missing Phone Count: **41**
+- Invalid Phone Format Count: **92**
+- Blank City Count: **34**
+- Country City Mismatch Count: **50**
+
+**Formula used for revenue overstatement:**
+```
+(Raw Revenue − Clean Revenue) ÷ Raw Revenue × 100
+```
+This calculates what percentage of the raw reported revenue was actually inflated or invalid. Step by step:
+1. Subtract clean revenue from raw revenue to find the gap (the "fake" revenue caused by bad data).
+2. Divide that gap by the raw revenue to turn it into a fraction of the whole.
+3. Multiply by 100 to express it as a percentage.
+
+In plain terms: *out of everything the raw data claimed as revenue, what percentage of that was actually wrong or inflated?*
+
+#### Page 2 — Customer & Revenue Insights
+Analyzes only the cleaned, trustworthy data to answer real business questions: which cities generate the most revenue, which have the highest average transaction value, and where the customer base is concentrated.
+
+- Total Clean Customers: **500**
+- Total Clean Revenue: **156.395k**
+- Average Clean Transaction Value: **349.88**
+- City with highest total revenue: **Islamabad**
+- City with highest average transaction value: **Lahore**
 
 ---
 
-## 🔄 Project Update: Power BI Extension (In Progress)
+### 🧮 Technical Implementation (DAX Measures)
 
-This project is being extended beyond SQL + Excel cleaning into a full **Power BI analysis**, covering the complete process from problem definition to business insights and recommendations.
+All calculations behind the dashboard were built using DAX measures rather than hardcoded values, so every number updates automatically if the underlying data changes.
 
-### Status: 🚧 In Progress
+**Raw table measures (customers_dirty):**
+```dax
+Total Raw Customers = COUNTROWS(raw_customers)
 
-Currently building two report pages:
-- **Page 1 — Data Quality Impact:** quantifies how much the raw (dirty) data distorted customer counts and revenue reporting, and documents every category of issue found (invalid amounts, invalid/test emails, missing/invalid phone formats, blank cities).
-- **Page 2 — Customer & Revenue Insights:** analyzes the *cleaned* data to answer real business questions — which cities generate the most revenue, which have the highest average transaction value, and where the biggest customer base is concentrated.
+Total Raw Revenue = 
+SUMX(raw_customers, IFERROR(VALUE(raw_customers[amount]), 0))
+```
+`Total Raw Revenue` uses `SUMX` to go row by row, `VALUE()` to convert the text `amount` column into a number, and `IFERROR()` to treat any non-numeric entry (like "abc") as 0 instead of breaking the calculation. This preserves the raw data's mess intentionally, so it can be compared honestly against the cleaned figures.
 
-### 🐞 Data Issue Found & Fix In Progress
+```dax
+Invalid Amount Count = 
+COUNTROWS(FILTER(raw_customers, ISERROR(VALUE(raw_customers[amount]))))
+```
+Counts how many rows could not be converted to a valid number — i.e., how many amount entries were genuinely invalid.
 
-While building Page 2, a new data quality issue was discovered that wasn't caught during the original SQL/Excel cleaning stage:
+```dax
+Missing Phone Count = 
+CALCULATE(COUNTROWS(raw_customers), raw_customers[phone] = "NULL")
 
-**Issue:** Every record where `country = India` had a **Pakistani city** (Islamabad, Karachi, or Lahore) instead of an Indian one.
+Invalid Phone Format Count = 
+CALCULATE(COUNTROWS(raw_customers), 
+    raw_customers[phone] <> "NULL" && 
+    LEN(SUBSTITUTE(raw_customers[phone], "-", "")) <> 11)
 
-**Root cause:** The original SQL script's random data generator selected `city` and `country` independently of each other, rather than pairing valid city–country combinations. As a result, any row randomly assigned "India" as its country still pulled from the same fixed city list, which only ever contained Pakistani cities.
+Blank City Count = 
+CALCULATE(COUNTROWS(raw_customers), raw_customers[city] = "")
+```
 
-**Fix:** Since every "India" row was consistently paired with a real Pakistani city, this confirms the **country** field — not the city — was the incorrect value. The fix is being applied in **Power Query** (Power BI) using a `Replace Values` step: `India → Pakistan`.
+**Clean table measures (customers_clean):**
+```dax
+Total Clean Customers = COUNTROWS(clean_customers)
 
-This decision was made deliberately at the Power Query stage (rather than re-editing the original CSV/Excel source) to keep the transformation logic visible, documented, and reproducible as part of the Power BI data model — consistent with this project's goal of showing the *full* analytics process, including issues found and corrected along the way, not just a polished final result.
+Total Clean Revenue = SUM(clean_customers[amount_clean])
 
-### Why this is documented here
-This project isn't meant to show only clean, pre-planned steps — it's meant to reflect a genuine, real-world analytics workflow, where new issues can surface even after earlier cleaning stages, and part of the job is catching them, diagnosing the root cause, and deciding where in the pipeline to fix them.
+Avg Clean Transaction Value = AVERAGE(clean_customers[amount_clean])
+
+Invalid Format Email Count = 
+CALCULATE(COUNTROWS(clean_customers), clean_customers[email_status] = "Invalid_Format")
+
+Test Fake Email Count = 
+CALCULATE(COUNTROWS(clean_customers), clean_customers[email_status] = "Test/Fake_Email")
+
+Total Bad Email Count = 
+CALCULATE(COUNTROWS(clean_customers), clean_customers[email_status] <> "Valid")
+```
+
+**Revenue Comparison table (for the Page 1 bar chart):**
+
+Since Raw Revenue and Clean Revenue live as separate measures on two different tables, a small standalone table was built to hold both values as chartable rows:
+
+```dax
+Revenue Comparison = 
+UNION(
+    ROW("Type", "Raw Revenue", "Value", [Total Raw Revenue]),
+    ROW("Type", "Clean Revenue", "Value", [Total Clean Revenue])
+)
+```
+`ROW()` builds a single row with a `Type` label and a `Value`, referencing the actual measure result (unlike `DATATABLE()`, which only accepts hardcoded constants and cannot reference measures). `UNION()` then stacks the two one-row tables into a single two-row table, giving the bar chart one column for category labels (`Type`) and one for values (`Value`).
 
 ---
-*This section will be updated as the Power BI portion of the project progresses.*
 
+### 🐞 Data Issue Found During Analysis
+
+While building Page 2, a data issue was discovered that had not been caught during the original SQL/Excel cleaning stage:
+
+**Issue:** Every record where `country = India` actually had a Pakistani city (Islamabad, Karachi, or Lahore) instead of an Indian one.
+
+**Root cause:** The original SQL script's random data generator selected `city` and `country` independently of each other, rather than pairing valid city–country combinations. Since the city list only ever contained Pakistani cities, any row randomly assigned "India" as its country still pulled from that same fixed list.
+
+**Fix:** Since every "India" row was consistently paired with a real Pakistani city, this confirmed the **country** field — not the city — was the incorrect value. The fix was applied in **Power Query** using a `Replace Values` step: `India → Pakistan`. This was done deliberately at the Power Query stage to keep the transformation visible, documented, and reproducible as part of the Power BI data model.
+
+Country/City Mismatch Count found: **50**
+
+---
+
+### 💡 Key Insights
+
+**Data Quality:**
+> Raw customer data contained significant quality issues that would have distorted business reporting if used as-is. Raw revenue was overstated by approximately **___%** due to invalid and outlier amount entries. **___** records had invalid or test/fake email addresses, and **___** records had missing or invalid phone numbers. Additionally, a systematic data generation issue was found and corrected, where all records marked "India" actually contained Pakistani cities. After cleaning, the trustworthy customer base is **___** records with total revenue of **___**.
+
+**Customer & Revenue:**
+> **[City]** brings in the most total money, mainly because it has more customers. But **[Other City]** has fewer customers overall — yet each customer there spends more on average. This city has fewer customers today, but big room to grow.
+
+---
+
+### ✅ Recommendations
+
+1. Prioritize marketing and acquisition spend toward **[city with highest average value]**, where each customer generates more revenue on average.
+2. Tighten signup validation for phone and email fields, since these were the most common sources of unusable data.
+3. Fix the system so the country/city mix-up doesn't happen again — the underlying data generation logic should pair cities and countries correctly at the source.
+
+---
+
+### 🖼️ Screenshots
+
+*(Add screenshots of Page 1, Page 2, and Page 3 here)*
+
+```
+![Data Quality Impact](screenshots/page1-data-quality-impact.png)
+![Customer & Revenue Insights](screenshots/page2-customer-revenue.png)
+![Insights & Recommendations](screenshots/page3-insights-recommendations.png)
+```
+
+---
+
+### 🛠️ Tools Used
+SQL (PostgreSQL) → Excel (data cleaning) → Power BI (Power Query + DAX + interactive reporting)
+
+---
+*This section documents the Power BI extension of the SQL + Excel data cleaning project — showing the complete analytics process from problem definition through business recommendations.*
 ---
 
 # 👤 Author
