@@ -86,19 +86,29 @@ for cleaning practice.
 ## 📁 Project Structure
 
 ```text
-sql-customer-dirty-data-generator/
+SQL-Dirty-Data-Creation/
 │
-├── Data/
+├── 📊 Dashboard/
+│   ├── Customer_and_revenue.png
+│   ├── Insights_and_recommendations.png
+│   └── data_quality_impact.png
+│
+├── 📁 Data/
 │   ├── Raw/
 │   │   └── customers_dirty.csv
 │   │
-│   └── clean/
+│   └── Clean/
 │       └── customers_clean.csv
 │
-├── SQL/
+├── 🗄️ SQL/
 │   └── customers_dirty_creation.sql
 │
-├── cleaning/
+├── 🧹 Cleaning/
+│   ├── raw_phone.png
+│   ├── raw_phone_2.png
+│   ├── raw_phone3.png
+│   ├── clean_phone_1.png
+│   ├── clean_phone_f.png
 │   ├── clean_amount_1.png
 │   ├── clean_amount_2.png
 │   ├── clean_amount_3.png
@@ -106,13 +116,11 @@ sql-customer-dirty-data-generator/
 │   ├── clean_country.png
 │   ├── clean_date.png
 │   ├── clean_email.png
-│   ├── clean_phone_1.png
-│   ├── clean_phone_f.png
-│   ├── final_clean.png
-│   ├── raw_phone.png
-│   ├── raw_phone3.png
-│   ├── raw_phone_2.png
-│   └── trim(b2).png
+│   ├── trim(b2).png
+│   └── final_clean.png
+│
+├── 🔄 power_query/
+│   └── country_replace.png
 │
 └── README.md
 ```
