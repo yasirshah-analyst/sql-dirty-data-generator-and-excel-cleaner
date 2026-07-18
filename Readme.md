@@ -926,5 +926,6 @@ Data Analyst | SQL | Excel
 
 - www.linkedin.com/in/yasir-shah-2364183b3
 - shahyasir443@gmail.com
+- https://github.com/yasirshah-analyst
 
 ---
